@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matrix Parser</title>
+    <style>
+        /* Root colors: a modern palette */
+        :root {
+            --primary-color: #1d2024;
+            --secondary-color: #ede15b;
+            --accent-color: #112D4E;
+            --highlight-color: #ea1745;
+        }
+
+        /* Overall body styles */
+        body {
+            font-family: 'Roboto', sans-serif; /* Change font-family here */
+            background-color: black;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Title box styling */
+        .title-container {
+            background-color: var(--primary-color);
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            position: relative;
+            margin-top: 10px;
+            z-index: 1;
+        }
+
+        /* Title styling */
+        h1 {
+            font-size: 6rem; /* 2x bigger */
+            margin: 0;
+            letter-spacing: 0.1em;
+            color: white;
+            font-weight: 700;
+            display: flex;
+            justify-content: center;
+        }
+
+        .matrix {
+            font-size: 4rem; /* MATRIX is larger (2:1 ratio) */
+            color: var(--highlight-color);
+        }
+        .parser {
+            font-size: 2rem; /* PARSER is smaller */
+            color: gold;
+            margin-top: 2.7%;
+            margin-left: 20px; /* Slight space between MATRIX and PARSER */
+        }
+
+        /* Description box styling */
+        .description {
+            position: relative;
+            color: white;
+            padding: 1.5rem;
+            font-size: 2.5rem; /* Doubled font size */
+            border-radius: 10px;
+            letter-spacing: 0.05em;
+            background-color: rgba(34, 32, 32, 0.5); /* More transparent */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 80%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+            backdrop-filter: blur(10px); /* Blur effect */
+        }
+
+        /* GitHub button styling */
+        .github-button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #24292e; /* Solid color for opaque button */
+            color: white;
+            text-decoration: none;
+            padding: 20px 40px; /* Adjust for size */
+            border-radius: 100px;
+            font-size: 32px; /* Double size */
+            margin-bottom: 100px;
+            transition: background-color 0.3s ease;
+            z-index: 2; /* Ensure the button is above background elements */
+        }
+        
+        .github-button:hover {
+            background-color: #2f363d;
+        }
+        
+        .github-logo {
+            width: 48px; /* Double logo size */
+            height: 48px;
+            fill: white;
+            margin-left: 20px;
+        }
+
+        /* Canvas styles */
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 4rem; /* Smaller title for tablets */
+            }
+            .matrix {
+                font-size: 3rem;
+            }
+            .parser {
+                font-size: 1.5rem;
+                margin-left: 5px;
+            }
+            .description {
+                font-size: 1.75rem; /* Smaller description text */
+                padding: 1rem;
+            }
+            .github-button {
+                font-size: 24px; /* Smaller button text */
+                padding: 15px 30px;
+            }
+            .github-logo {
+                width: 36px; /* Smaller logo */
+                height: 36px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 3rem; /* Even smaller title for mobile */
+            }
+            .matrix {
+                font-size: 2.5rem;
+            }
+            .parser {
+                font-size: 1.25rem;
+                margin-left: 5px;
+            }
+            .description {
+                font-size: 1.5rem; /* Smaller description for mobile */
+                padding: 0.75rem;
+                width: 90%; /* More compact */
+            }
+            .github-button {
+                font-size: 18px; /* Smaller button for mobile */
+                padding: 10px 20px;
+            }
+            .github-logo {
+                width: 24px; /* Smaller logo for mobile */
+                height: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="backgroundCanvas"></canvas>
+
+    <div class="title-container">
+        <h1><span class="matrix">MATRIX</span><span class="parser">PARSER</span></h1>
+    </div>
+
+    <div class="description">
+        <div class="description-text">
+            This is a sample description for the Matrix Parser. The content of this box will auto-adjust based on the amount of text placed here.
+            This parser is capable of handling complex matrix operations, providing results in real-time.
+        </div>
+    </div>
+
+    <a href="https://github.com/matrix-parser/parsing-engine" class="github-button">
+        GitHub
+        <svg class="github-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+        </svg>
+    </a>
+
+    <script>
+        // Star background script
+        const canvas = document.getElementById('backgroundCanvas'); // Use the correct canvas ID here
+        const ctx = canvas.getContext('2d');
+        let stars = [];
+        let mouse = {
+            x: undefined,
+            y: undefined
+        };
+        let mouseTimeout;
+        let connecting = false;
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        window.addEventListener('mousemove', function(event) {
+            mouse.x = event.x;
+            mouse.y = event.y;
+            connecting = false;
+            clearTimeout(mouseTimeout);
+            mouseTimeout = setTimeout(() => {
+                connecting = true;
+            }, 2000);
+        });
+
+        class Star {
+            constructor(x, y, radius, dx, dy) {
+                this.x = x;
+                this.y = y;
+                this.radius = radius;
+                this.dx = dx;
+                this.dy = dy;
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+                ctx.fillStyle = "#FFFFFF";
+                ctx.fill();
+            }
+
+            update() {
+                if (this.x + this.radius > innerWidth || this.x - this.radius < 0) {
+                    this.dx = -this.dx;
+                }
+
+                if (this.y + this.radius > innerHeight || this.y - this.radius < 0) {
+                    this.dy = -this.dy;
+                }
+
+                // Move the star
+                this.x += this.dx;
+                this.y += this.dy;
+
+                // Interactivity
+                let distance = Math.hypot(mouse.x - this.x, mouse.y - this.y);
+                if (distance < 100) {
+                    this.radius = 3;
+                } else {
+                    this.radius = 1;
+                }
+
+                this.draw();
+            }
+        }
+
+
+        function init() {
+            stars = [];
+            for (let i = 0; i < 1000; i++) {
+                let radius = 1;
+                let x = Math.random() * (innerWidth - radius * 2) + radius;
+                let y = Math.random() * (innerHeight - radius * 2) + radius;
+                let dx = (Math.random() - 0.5) * 0.5;
+                let dy = (Math.random() - 0.5) * 0.5;
+                stars.push(new Star(x, y, radius, dx, dy));
+            }
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            ctx.clearRect(0, 0, innerWidth, innerHeight);
+
+            stars.forEach(star => {
+                star.update();
+            });
+
+           
+        }
+
+        init();
+        animate();
+
+        window.addEventListener('resize', function() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            init();
+        });
+    </script>
+</body>
+</html>
